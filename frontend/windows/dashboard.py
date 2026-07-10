@@ -11,7 +11,7 @@ from frontend.components.header import Header
 from frontend.components.left_panel import LeftPanel
 from frontend.components.right_panel import RightPanel
 
-from frontend.widgets.animated_ring import AnimatedRing
+from frontend.widgets.arc_reactor import ArcReactor
 from frontend.widgets.particle_background import ParticleBackground
 
 
@@ -58,7 +58,7 @@ class Dashboard(QMainWindow):
         body.addWidget(LeftPanel(), 1)
 
         # AI Core
-        ai_core = AnimatedRing()
+        ai_core = ArcReactor()
         body.addWidget(ai_core, 2, Qt.AlignmentFlag.AlignCenter)
 
         # Right Panel
