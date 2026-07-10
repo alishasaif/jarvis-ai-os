@@ -1,33 +1,40 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer
 
+from frontend.widgets.glass_panel import GlassPanel
 from backend.services.system_monitor import SystemMonitor
 
 
-class LeftPanel(QWidget):
+class LeftPanel(GlassPanel):
 
     def __init__(self):
         super().__init__()
 
         self.monitor = SystemMonitor()
 
-        self.setStyleSheet("""
-            QWidget{
-                background:#10151C;
-                border:1px solid #00D8FF;
-                border-radius:10px;
-            }
-
+        # Style only the labels.
+        self.setStyleSheet(self.styleSheet() + """
             QLabel{
                 color:#00D8FF;
                 font-size:15px;
                 padding:4px;
+                background:transparent;
+                border:none;
             }
         """)
 
         layout = QVBoxLayout()
+        layout.setContentsMargins(15, 15, 15, 15)
+        layout.setSpacing(8)
 
         self.title = QLabel("SYSTEM STATUS")
+        self.title.setStyleSheet("""
+            font-size:18px;
+            font-weight:bold;
+            color:#00D8FF;
+            background:transparent;
+            border:none;
+        """)
 
         self.cpu = QLabel()
         self.ram = QLabel()
@@ -56,22 +63,8 @@ class LeftPanel(QWidget):
 
     def update_stats(self):
 
-        self.cpu.setText(
-            f"CPU : {self.monitor.get_cpu()} %"
-        )
-
-        self.ram.setText(
-            f"RAM : {self.monitor.get_ram()} %"
-        )
-
-        self.disk.setText(
-            f"DISK : {self.monitor.get_disk()} %"
-        )
-
-        self.network.setText(
-            f"NETWORK : {self.monitor.get_network_status()}"
-        )
-
-        self.uptime.setText(
-            f"UPTIME : {self.monitor.get_uptime()}"
-        )
+        self.cpu.setText(f"🖥 CPU : {self.monitor.get_cpu()} %")
+        self.ram.setText(f"🧠 RAM : {self.monitor.get_ram()} %")
+        self.disk.setText(f"💾 DISK : {self.monitor.get_disk()} %")
+        self.network.setText(f"🌐 NETWORK : {self.monitor.get_network_status()}")
+        self.uptime.setText(f"⏱ UPTIME : {self.monitor.get_uptime()}")

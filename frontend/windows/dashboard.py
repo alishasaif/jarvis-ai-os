@@ -4,10 +4,12 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
 )
+from PySide6.QtCore import Qt
 
 from frontend.components.header import Header
 from frontend.components.left_panel import LeftPanel
-from frontend.components.ai_core import AICore
+from frontend.components.right_panel import RightPanel
+from frontend.widgets.animated_ring import AnimatedRing
 
 
 class Dashboard(QMainWindow):
@@ -27,15 +29,25 @@ class Dashboard(QMainWindow):
         central = QWidget()
 
         main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(10, 10, 10, 10)
+        main_layout.setContentsMargins(15, 15, 15, 15)
+        main_layout.setSpacing(15)
 
+        # Header
         main_layout.addWidget(Header())
 
+        # Body
         body = QHBoxLayout()
+        body.setSpacing(20)
 
+        # Left Panel
         body.addWidget(LeftPanel(), 1)
 
-        body.addStretch(4)
+        # Center AI Core
+        ai_core = AnimatedRing()
+        body.addWidget(ai_core, 2, Qt.AlignmentFlag.AlignCenter)
+
+        # Right Voice Panel
+        body.addWidget(RightPanel(), 1)
 
         main_layout.addLayout(body)
 
