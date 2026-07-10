@@ -3,13 +3,16 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
+    QStackedLayout,
 )
 from PySide6.QtCore import Qt
 
 from frontend.components.header import Header
 from frontend.components.left_panel import LeftPanel
 from frontend.components.right_panel import RightPanel
+
 from frontend.widgets.animated_ring import AnimatedRing
+from frontend.widgets.particle_background import ParticleBackground
 
 
 class Dashboard(QMainWindow):
@@ -26,9 +29,21 @@ class Dashboard(QMainWindow):
             }
         """)
 
-        central = QWidget()
+        # Root widget
+        root = QWidget()
+        self.setCentralWidget(root)
 
-        main_layout = QVBoxLayout()
+        # Stack layout (background + foreground)
+        stack = QStackedLayout(root)
+        stack.setStackingMode(QStackedLayout.StackAll)
+
+        # Background
+        background = ParticleBackground()
+
+        # Foreground
+        foreground = QWidget()
+
+        main_layout = QVBoxLayout(foreground)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(15)
 
@@ -42,15 +57,15 @@ class Dashboard(QMainWindow):
         # Left Panel
         body.addWidget(LeftPanel(), 1)
 
-        # Center AI Core
+        # AI Core
         ai_core = AnimatedRing()
         body.addWidget(ai_core, 2, Qt.AlignmentFlag.AlignCenter)
 
-        # Right Voice Panel
+        # Right Panel
         body.addWidget(RightPanel(), 1)
 
         main_layout.addLayout(body)
 
-        central.setLayout(main_layout)
-
-        self.setCentralWidget(central)
+        # Add to stack
+        stack.addWidget(background)
+        stack.addWidget(foreground)
