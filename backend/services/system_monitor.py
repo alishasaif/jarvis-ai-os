@@ -1,5 +1,4 @@
 import psutil
-import socket
 import time
 
 
@@ -17,11 +16,13 @@ class SystemMonitor:
         return psutil.disk_usage("/").percent
 
     def get_network_status(self):
-        try:
-            socket.create_connection(("8.8.8.8", 53), timeout=1)
-            return "ONLINE"
-        except OSError:
-            return "OFFLINE"
+        stats = psutil.net_if_stats()
+
+        for interface in stats.values():
+            if interface.isup:
+                return "🟢 ONLINE"
+
+        return "🔴 OFFLINE"
 
     def get_uptime(self):
         seconds = int(time.time() - self.start_time)

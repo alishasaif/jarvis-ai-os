@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
 
 from frontend.components.header import Header
 from frontend.components.left_panel import LeftPanel
+from frontend.components.ai_core import AICore
 
 
 class Dashboard(QMainWindow):
