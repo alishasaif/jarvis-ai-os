@@ -1,13 +1,17 @@
 import sys
+
 from PySide6.QtWidgets import QApplication
-from backend.ui.main_window import MainWindow
+
+from frontend.windows.splash import SplashScreen
 
 
 def main():
+
     app = QApplication(sys.argv)
 
-    window = MainWindow()
-    window.show()
+    splash = SplashScreen()
+
+    splash.show()
 
     sys.exit(app.exec())
 
