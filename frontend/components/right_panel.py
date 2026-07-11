@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QLabel, QVBoxLayout
 from PySide6.QtCore import QTimer
 
 from frontend.widgets.glass_panel import GlassPanel
+from frontend.widgets.waveform import Waveform
 
 
 class RightPanel(GlassPanel):
@@ -13,7 +14,7 @@ class RightPanel(GlassPanel):
             QWidget{
                 background:#10151C;
                 border:1px solid #00D8FF;
-                border-radius:10px;
+                border-radius:12px;
             }
 
             QLabel{
@@ -27,6 +28,8 @@ class RightPanel(GlassPanel):
 
         title = QLabel("VOICE AI")
 
+        self.waveform = Waveform()
+
         self.mic = QLabel("🎤 Microphone : Ready")
         self.ai = QLabel("🤖 AI : Online")
         self.speaker = QLabel("🔊 Speaker : Connected")
@@ -34,6 +37,10 @@ class RightPanel(GlassPanel):
 
         layout.addWidget(title)
         layout.addSpacing(10)
+
+        layout.addWidget(self.waveform)
+
+        layout.addSpacing(15)
 
         layout.addWidget(self.mic)
         layout.addWidget(self.ai)
@@ -53,13 +60,14 @@ class RightPanel(GlassPanel):
     def demo_status(self):
 
         states = [
-            "🎤 Microphone : Ready",
-            "🎤 Listening...",
-            "🧠 Thinking...",
-            "🗣 Speaking..."
+            ("🎤 Microphone : Ready", "🤖 AI : Online"),
+            ("🎤 Listening...", "🤖 AI : Listening"),
+            ("🧠 Thinking...", "🤖 AI : Processing"),
+            ("🗣 Speaking...", "🤖 AI : Responding")
         ]
 
-        self.mic.setText(states[self.state])
+        self.mic.setText(states[self.state][0])
+        self.ai.setText(states[self.state][1])
 
         self.state += 1
 
