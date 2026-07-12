@@ -1,27 +1,39 @@
+from backend.system_monitor import SystemMonitor
+
 from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
-    QHBoxLayout,
-    QStackedLayout,
+    QHBoxLayout
 )
+
 from PySide6.QtCore import Qt
+
 
 from frontend.components.header import Header
 from frontend.components.left_panel import LeftPanel
 from frontend.components.right_panel import RightPanel
 
 from frontend.widgets.arc_reactor import ArcReactor
-from frontend.widgets.particle_background import ParticleBackground
 
 
 class Dashboard(QMainWindow):
 
     def __init__(self):
+
         super().__init__()
 
-        self.setWindowTitle("J.A.R.V.I.S AI OS")
-        self.resize(1600, 900)
+
+        self.setWindowTitle(
+            "J.A.R.V.I.S AI OS"
+        )
+
+
+        self.resize(
+            1600,
+            900
+        )
+
 
         self.setStyleSheet("""
             QMainWindow{
@@ -29,43 +41,118 @@ class Dashboard(QMainWindow):
             }
         """)
 
-        # Root widget
+
+        # Main Widget
+
         root = QWidget()
-        self.setCentralWidget(root)
 
-        # Stack layout (background + foreground)
-        stack = QStackedLayout(root)
-        stack.setStackingMode(QStackedLayout.StackAll)
+        self.setCentralWidget(
+            root
+        )
 
-        # Background
-        background = ParticleBackground()
 
-        # Foreground
-        foreground = QWidget()
+        main_layout = QVBoxLayout()
 
-        main_layout = QVBoxLayout(foreground)
-        main_layout.setContentsMargins(15, 15, 15, 15)
-        main_layout.setSpacing(15)
+
+        main_layout.setContentsMargins(
+            20,
+            20,
+            20,
+            20
+        )
+
+
+        root.setLayout(
+            main_layout
+        )
+
 
         # Header
-        main_layout.addWidget(Header())
 
-        # Body
+        header = Header()
+
+        main_layout.addWidget(
+            header
+        )
+
+
+        # Center Area
+
         body = QHBoxLayout()
-        body.setSpacing(20)
 
-        # Left Panel
-        body.addWidget(LeftPanel(), 1)
 
-        # AI Core
-        ai_core = ArcReactor()
-        body.addWidget(ai_core, 2, Qt.AlignmentFlag.AlignCenter)
+        body.setSpacing(
+            30
+        )
 
-        # Right Panel
-        body.addWidget(RightPanel(), 1)
 
-        main_layout.addLayout(body)
+        # Left
 
-        # Add to stack
-        stack.addWidget(background)
-        stack.addWidget(foreground)
+        left = LeftPanel()
+
+        body.addWidget(
+            left
+        )
+
+
+        # Arc Reactor
+
+        self.arc = ArcReactor()
+
+        body.addWidget(
+            self.arc,
+            1,
+            Qt.AlignmentFlag.AlignCenter
+        )
+
+
+        # Right
+
+        right = RightPanel()
+
+        body.addWidget(
+            right
+        )
+
+
+        # LIVE SYSTEM DATA TEST
+
+        print("===== JARVIS LIVE SYSTEM =====")
+
+        print(
+            "CPU:",
+            SystemMonitor.get_cpu(),
+            "%"
+        )
+
+        print(
+            "RAM:",
+            SystemMonitor.get_ram(),
+            "%"
+        )
+
+        print(
+            "DISK:",
+            SystemMonitor.get_disk(),
+            "%"
+        )
+
+        print(
+            "DEVICE:",
+            SystemMonitor.get_device()
+        )
+
+        print(
+            "OS:",
+            SystemMonitor.get_os()
+        )
+
+        print(
+            "IP:",
+            SystemMonitor.get_network()
+        )
+
+
+        main_layout.addLayout(
+            body
+        )

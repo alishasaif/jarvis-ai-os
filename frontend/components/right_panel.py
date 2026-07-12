@@ -1,75 +1,88 @@
-from PySide6.QtWidgets import QLabel, QVBoxLayout
-from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QLabel
+)
 
-from frontend.widgets.glass_panel import GlassPanel
-from frontend.widgets.waveform import Waveform
 
-
-class RightPanel(GlassPanel):
+class RightPanel(QWidget):
 
     def __init__(self):
+
         super().__init__()
 
-        self.setStyleSheet("""
-            QWidget{
-                background:#10151C;
-                border:1px solid #00D8FF;
-                border-radius:12px;
-            }
-
-            QLabel{
-                color:#00D8FF;
-                font-size:15px;
-                padding:4px;
-            }
-        """)
 
         layout = QVBoxLayout()
 
-        title = QLabel("VOICE AI")
 
-        self.waveform = Waveform()
+        title = QLabel(
+            "JARVIS CORE"
+        )
 
-        self.mic = QLabel("🎤 Microphone : Ready")
-        self.ai = QLabel("🤖 AI : Online")
-        self.speaker = QLabel("🔊 Speaker : Connected")
-        self.user = QLabel("👤 User : Saif")
+
+        title.setStyleSheet("""
+            QLabel{
+                color:#00d8ff;
+                font-size:18px;
+                font-weight:bold;
+            }
+        """)
+
 
         layout.addWidget(title)
-        layout.addSpacing(10)
 
-        layout.addWidget(self.waveform)
 
-        layout.addSpacing(15)
 
-        layout.addWidget(self.mic)
-        layout.addWidget(self.ai)
-        layout.addWidget(self.speaker)
-        layout.addWidget(self.user)
+        self.ai_status = QLabel(
+            "AI STATUS : ONLINE"
+        )
+
+        self.memory = QLabel(
+            "MEMORY : READY"
+        )
+
+        self.voice = QLabel(
+            "VOICE : STANDBY"
+        )
+
+        self.model = QLabel(
+            "MODEL : NOT CONNECTED"
+        )
+
+
+        items = [
+            self.ai_status,
+            self.memory,
+            self.voice,
+            self.model
+        ]
+
+
+        for item in items:
+
+            item.setStyleSheet("""
+                QLabel{
+                    color:#9eeaff;
+                    font-size:14px;
+                    padding:8px;
+                    border:1px solid #003344;
+                    border-radius:6px;
+                }
+            """)
+
+
+            layout.addWidget(item)
+
+
 
         layout.addStretch()
 
-        self.setLayout(layout)
 
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.demo_status)
-        self.timer.start(3000)
+        self.setLayout(
+            layout
+        )
 
-        self.state = 0
 
-    def demo_status(self):
-
-        states = [
-            ("🎤 Microphone : Ready", "🤖 AI : Online"),
-            ("🎤 Listening...", "🤖 AI : Listening"),
-            ("🧠 Thinking...", "🤖 AI : Processing"),
-            ("🗣 Speaking...", "🤖 AI : Responding")
-        ]
-
-        self.mic.setText(states[self.state][0])
-        self.ai.setText(states[self.state][1])
-
-        self.state += 1
-
-        if self.state >= len(states):
-            self.state = 0
+        self.setFixedWidth(
+            250
+        )

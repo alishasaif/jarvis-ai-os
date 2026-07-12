@@ -1,0 +1,1 @@
+from backend.ui.widgets.ai_core import AICoreWidget
