@@ -1,19 +1,49 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
+*.pyd
+*.so
 
 # Virtual Environment
+venv/
+.env
 .venv/
 
-# VS Code
+# IDE
 .vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Logs
-logs/
+*.log
+backend/logs/
 
-# Database
-*.db
+# Build
+build/
+dist/
+*.spec
 
-# Environment
-.env
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Cache
+.cache/
+
+# Local Config
+config.local.json
+
+# Ollama
+*.gguf
+
+# Temporary
+temp/
+tmp/
+
+# GitHub
+.github/.DS_Store
