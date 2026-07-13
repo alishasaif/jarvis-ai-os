@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -9,6 +8,8 @@ from PySide6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
+
+from backend.services.ai_service import AIService
 
 
 class ChatPanel(QWidget):
@@ -20,6 +21,8 @@ class ChatPanel(QWidget):
         super().__init__()
 
         self.setObjectName("ChatPanel")
+
+        self.ai = AIService()
 
         layout = QVBoxLayout(self)
 
@@ -50,17 +53,20 @@ class ChatPanel(QWidget):
 
     def system_message(self, text):
         time = datetime.now().strftime("%H:%M:%S")
+
         self.history.append(
             f'<span style="color:#00E5FF;">[{time}] JARVIS:</span> {text}'
         )
 
     def user_message(self, text):
         time = datetime.now().strftime("%H:%M:%S")
+
         self.history.append(
             f'<span style="color:#FFFFFF;">[{time}] YOU:</span> {text}'
         )
 
     def send_message(self):
+
         text = self.input.text().strip()
 
         if not text:
@@ -68,7 +74,8 @@ class ChatPanel(QWidget):
 
         self.user_message(text)
 
-        # Placeholder response
-        self.system_message("Processing request...")
+        response = self.ai.ask(text)
+
+        self.system_message(response)
 
         self.input.clear()
