@@ -1,9 +1,12 @@
+from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QGridLayout,
 )
+
+from backend.services.system_service import SystemService
 
 from backend.ui.widgets.header import Header
 from backend.ui.widgets.sidebar import Sidebar
@@ -55,6 +58,7 @@ class Dashboard(QWidget):
         # ======================
 
         cards = QGridLayout()
+        cards.setSpacing(12)
 
         self.cpu = SystemCard("CPU")
         self.ram = SystemCard("RAM")
@@ -73,9 +77,35 @@ class Dashboard(QWidget):
         root.addLayout(cards)
 
         # ======================
-        # Chat
+        # Chat Panel
         # ======================
 
         self.chat = ChatPanel()
-
         root.addWidget(self.chat)
+
+        # ======================
+        # Live System Updates
+        # ======================
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_system)
+        self.timer.start(1000)
+
+        self.update_system()
+
+    def update_system(self):
+        """
+        Refresh all system cards.
+        """
+
+        stats = SystemService.get_stats()
+
+        print("=" * 50)
+        print(stats)
+
+        self.cpu.set_value(f"{stats['cpu']} %")
+        self.ram.set_value(f"{stats['ram']} %")
+        self.disk.set_value(f"{stats['disk']} %")
+        self.network.set_value(stats["network"])
+        self.battery.set_value(stats["battery"])
+        self.gpu.set_value(stats["gpu"])

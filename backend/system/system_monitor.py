@@ -16,7 +16,6 @@ except ImportError:
 
 
 class SystemMonitor:
-
     @staticmethod
     def get_cpu():
         return psutil.cpu_percent(interval=0.1)
