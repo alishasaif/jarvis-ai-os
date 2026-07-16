@@ -15,31 +15,17 @@ class LeftPanel(QWidget):
 
         super().__init__()
 
-        self.setFixedWidth(300)
-
-        self.setStyleSheet("""
-            QWidget{
-                background-color: rgba(5,15,25,220);
-                border:1px solid #008cff;
-                border-radius:15px;
-            }
-        """)
-
-
         layout = QVBoxLayout()
-        layout.setSpacing(12)
-
 
         title = QLabel(
-            "◈ SYSTEM MONITOR"
+            "SYSTEM MONITOR"
         )
 
         title.setStyleSheet("""
             QLabel{
-                color:#00ffff;
-                font-size:20px;
+                color:#00d8ff;
+                font-size:18px;
                 font-weight:bold;
-                padding:10px;
             }
         """)
 
@@ -49,13 +35,13 @@ class LeftPanel(QWidget):
         self.cpu = QLabel()
         self.ram = QLabel()
         self.disk = QLabel()
-        self.gpu = QLabel()
         self.battery = QLabel()
         self.network = QLabel()
+        self.gpu = QLabel()
         self.uptime = QLabel()
 
 
-        self.labels = [
+        labels = [
             self.cpu,
             self.ram,
             self.disk,
@@ -66,26 +52,30 @@ class LeftPanel(QWidget):
         ]
 
 
-        for item in self.labels:
+        for item in labels:
 
             item.setStyleSheet("""
                 QLabel{
-                    color:#00ffff;
-                    background-color:rgba(0,40,70,120);
-                    font-size:15px;
-                    font-weight:bold;
-                    padding:12px;
-                    border:1px solid #005577;
-                    border-radius:10px;
+                    color:#9eeaff;
+                    font-size:14px;
+                    padding:8px;
+                    border:1px solid #003344;
+                    border-radius:6px;
                 }
             """)
 
             layout.addWidget(item)
 
 
+
         layout.addStretch()
 
+
         self.setLayout(layout)
+
+
+        self.setFixedWidth(260)
+
 
 
         self.timer = QTimer(self)
@@ -107,29 +97,35 @@ class LeftPanel(QWidget):
 
 
         self.cpu.setText(
-            f"⚡ CPU      {stats['cpu']}%"
+            f"CPU : {stats['cpu']}%"
         )
+
 
         self.ram.setText(
-            f"◉ RAM      {stats['ram']}%"
+            f"RAM : {stats['ram']}%"
         )
+
 
         self.disk.setText(
-            f"◈ DISK     {stats['disk']}%"
+            f"DISK : {stats['disk']}%"
         )
+
 
         self.gpu.setText(
-            f"◆ GPU      {stats['gpu']}"
+            f"GPU : {stats['gpu']}"
         )
+
 
         self.battery.setText(
-            f"🔋 BATTERY  {stats['battery']}"
+            f"BATTERY : {stats['battery']}"
         )
+
 
         self.network.setText(
-            f"◌ NETWORK  {stats['network']}"
+            f"NETWORK : {stats['network']}"
         )
 
+
         self.uptime.setText(
-            f"⏱ UPTIME   {stats['uptime']}"
+            f"UPTIME : {stats['uptime']}"
         )
