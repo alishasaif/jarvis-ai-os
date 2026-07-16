@@ -1,63 +1,67 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QLabel, QHBoxLayout
+from PySide6.QtWidgets import (
+    QFrame,
+    QLabel,
+    QVBoxLayout,
+)
+
+from backend.ui import theme
 
 
-class HUDItem(QLabel):
+class SystemCard(QFrame):
+    """
+    J.A.R.V.I.S HUD System Card
+    """
 
-    def __init__(self, title):
+    def __init__(self, title: str, value: str = "--"):
         super().__init__()
 
-        self.title = title
+        self.setObjectName("SystemCard")
 
-        self.setAlignment(Qt.AlignCenter)
+        self.setMinimumHeight(105)
+        self.setMaximumHeight(115)
 
-        self.setStyleSheet("""
-            QLabel{
-                background:#10151d;
-                border:1px solid #00d9ff;
-                border-radius:8px;
-                color:#00e5ff;
-                font-size:13px;
-                font-weight:bold;
-                padding:8px;
-            }
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(18, 12, 18, 12)
+        layout.setSpacing(6)
+
+        self.title = QLabel(title)
+        self.title.setAlignment(Qt.AlignCenter)
+
+        self.title.setStyleSheet(f"""
+            QLabel {{
+                color: {theme.TEXT_SECONDARY};
+                font-size: 15px;
+                font-weight: bold;
+                letter-spacing: 2px;
+            }}
         """)
 
-        self.update_value("--")
+        self.value = QLabel(value)
+        self.value.setAlignment(Qt.AlignCenter)
 
-    def update_value(self, value):
-        self.setText(f"{self.title}\n{value}")
+        self.value.setStyleSheet(f"""
+            QLabel {{
+                color: {theme.PRIMARY_LIGHT};
+                font-size: 26px;
+                font-weight: bold;
+            }}
+        """)
 
+        layout.addWidget(self.title)
+        layout.addWidget(self.value)
 
-class SystemHUD(QWidget):
+        self.setStyleSheet(f"""
+            QFrame#SystemCard {{
+                background-color: {theme.PANEL};
+                border: 1px solid {theme.BORDER};
+                border-radius: 12px;
+            }}
 
-    def __init__(self):
-        super().__init__()
+            QFrame#SystemCard:hover {{
+                border: 2px solid {theme.PRIMARY};
+            }}
+        """)
 
-        layout = QHBoxLayout(self)
-
-        layout.setContentsMargins(0,0,0,0)
-        layout.setSpacing(8)
-
-        self.cpu = HUDItem("CPU")
-        self.ram = HUDItem("RAM")
-        self.disk = HUDItem("DISK")
-        self.net = HUDItem("NET")
-        self.gpu = HUDItem("GPU")
-        self.battery = HUDItem("BAT")
-
-        layout.addWidget(self.cpu)
-        layout.addWidget(self.ram)
-        layout.addWidget(self.disk)
-        layout.addWidget(self.net)
-        layout.addWidget(self.gpu)
-        layout.addWidget(self.battery)
-
-    def update(self, stats):
-
-        self.cpu.update_value(f"{stats['cpu']}%")
-        self.ram.update_value(f"{stats['ram']}%")
-        self.disk.update_value(f"{stats['disk']}%")
-        self.net.update_value(stats["network"])
-        self.gpu.update_value(stats["gpu"])
-        self.battery.update_value(stats["battery"])
+    def set_value(self, value):
+        self.value.setText(str(value))

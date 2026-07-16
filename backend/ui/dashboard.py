@@ -58,7 +58,8 @@ class Dashboard(QWidget):
         # ======================
 
         cards = QGridLayout()
-        cards.setSpacing(12)
+        cards.setHorizontalSpacing(18)
+        cards.setVerticalSpacing(10)
 
         self.cpu = SystemCard("CPU")
         self.ram = SystemCard("RAM")
@@ -74,14 +75,14 @@ class Dashboard(QWidget):
         cards.addWidget(self.battery, 1, 1)
         cards.addWidget(self.gpu, 1, 2)
 
-        root.addLayout(cards)
+        root.addLayout(cards, 1)
 
         # ======================
         # Chat Panel
         # ======================
 
         self.chat = ChatPanel()
-        root.addWidget(self.chat)
+        root.addWidget(self.chat, 3)
 
         # ======================
         # Live System Updates

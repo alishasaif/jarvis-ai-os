@@ -9,20 +9,20 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
 )
 
-from backend.services.ai_service import AIService
+from backend.ai.router import AIRouter
+from backend.ai.providers.ollama_provider import OllamaProvider
 
 
 class ChatPanel(QWidget):
     """
-    Chat Console Widget
+    J.A.R.V.I.S Chat Panel
     """
 
     def __init__(self):
         super().__init__()
 
-        self.setObjectName("ChatPanel")
-
-        self.ai = AIService()
+        self.router = AIRouter()
+        self.ai = OllamaProvider()
 
         layout = QVBoxLayout(self)
 
@@ -32,11 +32,11 @@ class ChatPanel(QWidget):
 
         layout.addWidget(self.history)
 
-        # Input Row
+        # Bottom Input
         bottom = QHBoxLayout()
 
         self.input = QLineEdit()
-        self.input.setPlaceholderText("Type a command...")
+        self.input.setPlaceholderText("Ask J.A.R.V.I.S...")
 
         self.send = QPushButton("Send")
 
@@ -48,21 +48,20 @@ class ChatPanel(QWidget):
         self.send.clicked.connect(self.send_message)
         self.input.returnPressed.connect(self.send_message)
 
-        self.system_message("J.A.R.V.I.S initialized.")
+        self.system_message("J.A.R.V.I.S Online.")
         self.system_message("Awaiting your command...")
 
-    def system_message(self, text):
-        time = datetime.now().strftime("%H:%M:%S")
-
-        self.history.append(
-            f'<span style="color:#00E5FF;">[{time}] JARVIS:</span> {text}'
-        )
+    def timestamp(self):
+        return datetime.now().strftime("%H:%M:%S")
 
     def user_message(self, text):
-        time = datetime.now().strftime("%H:%M:%S")
-
         self.history.append(
-            f'<span style="color:#FFFFFF;">[{time}] YOU:</span> {text}'
+            f'<span style="color:white;">[{self.timestamp()}] YOU:</span> {text}'
+        )
+
+    def system_message(self, text):
+        self.history.append(
+            f'<span style="color:#00E5FF;">[{self.timestamp()}] JARVIS:</span> {text}'
         )
 
     def send_message(self):
@@ -73,9 +72,19 @@ class ChatPanel(QWidget):
             return
 
         self.user_message(text)
-
-        response = self.ai.ask(text)
-
-        self.system_message(response)
-
         self.input.clear()
+
+        # Try local command first
+        result = self.router.route(text)
+
+        if result:
+            self.system_message(result)
+            return
+
+        # Otherwise ask Ollama
+        try:
+            answer = self.ai.generate(text)
+            self.system_message(answer)
+
+        except Exception as e:
+            self.system_message(f"AI Error: {e}")
