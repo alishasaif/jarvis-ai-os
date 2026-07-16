@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtGui import QPainter, QPen, QColor, QFont
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPainter, QColor, QPen
 
 
 class SystemGauge(QWidget):
@@ -17,11 +17,14 @@ class SystemGauge(QWidget):
             140
         )
 
+        self.setMaximumHeight(
+            150
+        )
+
 
     def setValue(self, value):
 
-        self.value = float(value)
-
+        self.value = value
         self.update()
 
 
@@ -31,16 +34,31 @@ class SystemGauge(QWidget):
         painter = QPainter(self)
 
         painter.setRenderHint(
-            QPainter.RenderHint.Antialiasing
+            QPainter.Antialiasing
         )
 
 
-        rect = self.rect()
+        size = min(
+            self.width(),
+            self.height()
+        )
 
-        center = rect.center()
+
+        rect_size = size - 20
 
 
-        radius = 45
+        x = (
+            self.width()
+            -
+            rect_size
+        ) / 2
+
+
+        y = (
+            self.height()
+            -
+            rect_size
+        ) / 2
 
 
 
@@ -59,84 +77,67 @@ class SystemGauge(QWidget):
         )
 
 
-        painter.drawEllipse(
-            center,
-            radius,
-            radius
+        painter.drawArc(
+            int(x),
+            int(y),
+            int(rect_size),
+            int(rect_size),
+            0,
+            360 * 16
         )
 
 
 
-        # Active orange ring
+        # Value ring
 
         pen = QPen(
-            QColor("#FF9A1F")
+            QColor("#00E5FF")
         )
 
         pen.setWidth(
             10
         )
 
-        pen.setCapStyle(
-            Qt.PenCapStyle.RoundCap
-        )
-
-
         painter.setPen(
             pen
         )
 
 
+        angle = int(
+            self.value * 3.6 * 16
+        )
+
+
         painter.drawArc(
-            center.x()-radius,
-            center.y()-radius,
-            radius*2,
-            radius*2,
-            90*16,
-            -int(self.value * 3.6) * 16
+            int(x),
+            int(y),
+            int(rect_size),
+            int(rect_size),
+            90 * 16,
+            -angle
         )
 
 
 
-        # Percentage text
+        # Text
 
         painter.setPen(
             QColor("#FFFFFF")
         )
 
 
-        painter.setFont(
-            QFont(
-                "Arial",
-                14,
-                QFont.Weight.Bold
-            )
-        )
-
-
         painter.drawText(
-            rect,
-            Qt.AlignmentFlag.AlignCenter,
-            f"{int(self.value)}%"
+            self.rect(),
+            Qt.AlignCenter,
+            f"{self.value}%"
         )
 
 
 
         # Label
 
-        painter.setFont(
-            QFont(
-                "Arial",
-                9
-            )
-        )
-
-
         painter.drawText(
             0,
-            self.height()-10,
-            self.width(),
-            20,
-            Qt.AlignmentFlag.AlignCenter,
+            self.height()-5,
             self.title
         )
