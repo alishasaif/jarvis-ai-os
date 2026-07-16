@@ -1,0 +1,85 @@
+from PySide6.QtCore import QObject, QThread, Signal
+
+from backend.workers.ai_worker import AIWorker
+from backend.core.jarvis_events import jarvis_events
+
+
+class AIController(QObject):
+
+    response_ready = Signal(str)
+    error = Signal(str)
+
+    def __init__(self):
+
+        super().__init__()
+
+        self.thread = None
+        self.worker = None
+        self.busy = False
+
+    def ask(self, prompt: str):
+
+        if self.busy:
+            return
+
+        self.busy = True
+
+        self.thread = QThread()
+
+        self.worker = AIWorker()
+
+        self.worker.moveToThread(self.thread)
+
+        self.thread.started.connect(
+            lambda: self.worker.process(prompt)
+        )
+
+        self.worker.finished.connect(
+            self._finished
+        )
+
+        self.worker.error.connect(
+            self._error
+        )
+
+        self.worker.listening.connect(
+            lambda: jarvis_events.state_changed.emit("LISTENING")
+        )
+
+        self.worker.thinking.connect(
+            lambda: jarvis_events.state_changed.emit("THINKING")
+        )
+
+        self.worker.speaking.connect(
+            lambda: jarvis_events.state_changed.emit("SPEAKING")
+        )
+
+        self.thread.start()
+
+    def _finished(self, text):
+
+        self.busy = False
+
+        jarvis_events.state_changed.emit("IDLE")
+
+        self.response_ready.emit(text)
+
+        self.thread.quit()
+        self.thread.wait()
+
+        self.worker.deleteLater()
+        self.thread.deleteLater()
+
+    def _error(self, message):
+
+        self.busy = False
+
+        jarvis_events.state_changed.emit("IDLE")
+
+        self.error.emit(message)
+
+        self.thread.quit()
+        self.thread.wait()
+
+        self.worker.deleteLater()
+        self.thread.deleteLater()
