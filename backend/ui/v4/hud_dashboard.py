@@ -11,6 +11,7 @@ from backend.services.system_service import SystemService
 
 from backend.ui.widgets.ai_core import AICore
 from backend.ui.widgets.chat_panel import ChatPanel
+from backend.ui.widgets.system_gauge import SystemGauge
 
 from backend.ui.v4.hud_panel import HUDPanel
 from backend.ui.v4.status_bar import StatusBar
@@ -26,7 +27,6 @@ class HUDDashboard(QWidget):
 
 
         root = QVBoxLayout(self)
-
 
         root.setContentsMargins(
             15,
@@ -60,7 +60,6 @@ class HUDDashboard(QWidget):
 
         left = HUDPanel()
 
-
         left_layout = left.layout()
 
 
@@ -81,34 +80,45 @@ class HUDDashboard(QWidget):
 
 
 
-        self.cpu_label = HUDLabel(
-            "CPU -- %"
+        # =========================
+        # JARVIS SYSTEM GAUGES
+        # =========================
+
+
+        self.cpu_gauge = SystemGauge(
+            "CPU"
         )
+
+
+        self.ram_gauge = SystemGauge(
+            "RAM"
+        )
+
+
+        self.disk_gauge = SystemGauge(
+            "DISK"
+        )
+
 
         left_layout.addWidget(
-            self.cpu_label
+            self.cpu_gauge
         )
 
-
-
-        self.ram_label = HUDLabel(
-            "RAM -- %"
-        )
 
         left_layout.addWidget(
-            self.ram_label
+            self.ram_gauge
         )
 
-
-
-        self.disk_label = HUDLabel(
-            "DISK -- %"
-        )
 
         left_layout.addWidget(
-            self.disk_label
+            self.disk_gauge
         )
 
+
+
+        # =========================
+        # EXTRA TELEMETRY
+        # =========================
 
 
         self.battery_label = HUDLabel(
@@ -174,7 +184,6 @@ class HUDDashboard(QWidget):
         left_layout.addWidget(
             HUDLabel("VOICE READY")
         )
-
 
 
         left_layout.addWidget(
@@ -264,7 +273,7 @@ class HUDDashboard(QWidget):
 
 
         # =========================
-        # TELEMETRY
+        # TELEMETRY BAR
         # =========================
 
 
@@ -327,19 +336,25 @@ class HUDDashboard(QWidget):
 
 
 
-        self.cpu_label.setText(
-            f"CPU   {stats['cpu']} %"
+        # GAUGES
+
+        self.cpu_gauge.setValue(
+            stats["cpu"]
         )
 
 
-        self.ram_label.setText(
-            f"RAM   {stats['ram']} %"
+        self.ram_gauge.setValue(
+            stats["ram"]
         )
 
 
-        self.disk_label.setText(
-            f"DISK  {stats['disk']} %"
+        self.disk_gauge.setValue(
+            stats["disk"]
         )
+
+
+
+        # TEXT TELEMETRY
 
 
         self.battery_label.setText(
