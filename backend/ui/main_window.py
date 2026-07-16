@@ -1,6 +1,6 @@
 ﻿from PySide6.QtWidgets import QMainWindow
 
-from frontend.windows.dashboard import Dashboard
+from backend.ui.v4.hud_dashboard import HUDDashboard
 
 
 class MainWindow(QMainWindow):
@@ -19,5 +19,5 @@ class MainWindow(QMainWindow):
         )
 
         self.setCentralWidget(
-            Dashboard()
+            HUDDashboard()
         )
