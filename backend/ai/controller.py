@@ -22,6 +22,8 @@ class AIController(QObject):
         if self.busy:
             return
 
+        print("[AIController] ask() called")    
+
         self.busy = True
 
         self.thread = QThread()
@@ -53,6 +55,8 @@ class AIController(QObject):
         self.worker.speaking.connect(
             lambda: jarvis_events.state_changed.emit("SPEAKING")
         )
+
+        print("[AIController] Starting worker thread")
 
         self.thread.start()
 

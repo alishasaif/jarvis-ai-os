@@ -1,0 +1,64 @@
+[1mdiff --git a/backend/services/system_service.py b/backend/services/system_service.py[m
+[1mindex 3621a15..273c057 100644[m
+[1m--- a/backend/services/system_service.py[m
+[1m+++ b/backend/services/system_service.py[m
+[36m@@ -1,15 +1,19 @@[m
+ """[m
+ System Service[m
+[31m-Provides live system data to the UI.[m
+[32m+[m[32mProvides live system data to the UI[m
+[32m+[m[32mand publishes updates through the[m
+[32m+[m[32mglobal event bus.[m
+ """[m
+ [m
+ from backend.system.system_monitor import SystemMonitor[m
+[32m+[m[32mfrom backend.core.jarvis_events import jarvis_events[m
+ [m
+ [m
+ class SystemService:[m
+ [m
+     @staticmethod[m
+     def get_stats():[m
+[32m+[m
+         return {[m
+             "cpu": SystemMonitor.get_cpu(),[m
+             "ram": SystemMonitor.get_ram(),[m
+[36m@@ -20,4 +24,35 @@[m [mclass SystemService:[m
+             "device": SystemMonitor.get_device(),[m
+             "os": SystemMonitor.get_os(),[m
+             "uptime": SystemMonitor.get_uptime(),[m
+[31m-        }[m
+\ No newline at end of file[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m    @staticmethod[m
+[32m+[m[32m    def publish_stats():[m
+[32m+[m
+[32m+[m[32m        stats = SystemService.get_stats()[m
+[32m+[m
+[32m+[m[32m        jarvis_events.cpu_changed.emit([m
+[32m+[m[32m            stats["cpu"][m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        jarvis_events.ram_changed.emit([m
+[32m+[m[32m            stats["ram"][m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        jarvis_events.disk_changed.emit([m
+[32m+[m[32m            stats["disk"][m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        jarvis_events.network_changed.emit([m
+[32m+[m[32m            stats["network"][m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        jarvis_events.battery_changed.emit([m
+[32m+[m[32m            stats["battery"][m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        jarvis_events.system_updated.emit([m
+[32m+[m[32m            stats[m
+[32m+[m[32m        )[m
+[32m+[m
+[32m+[m[32m        return stats[m
+\ No newline at end of file[m

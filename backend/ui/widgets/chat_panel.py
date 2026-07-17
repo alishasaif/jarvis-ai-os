@@ -96,16 +96,6 @@ class ChatPanel(QWidget):
 
     def on_response(self, answer):
 
-        cursor = self.history.textCursor()
-
-        cursor.movePosition(cursor.End)
-
-        cursor.select(cursor.BlockUnderCursor)
-
-        cursor.removeSelectedText()
-
-        cursor.deletePreviousChar()
-
         self.system_message(answer)
 
         self.input.setEnabled(True)
@@ -119,3 +109,5 @@ class ChatPanel(QWidget):
 
         self.input.setEnabled(True)
         self.send.setEnabled(True)
+
+        self.input.setFocus()
