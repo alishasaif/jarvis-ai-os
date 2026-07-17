@@ -6,9 +6,7 @@
 
 from PySide6.QtCore import QTimer
 
-
 from backend.services.system_service import SystemService
-
 from backend.core.jarvis_events import jarvis_events
 
 from backend.ui.widgets.ai_core import AICore
@@ -20,13 +18,11 @@ from backend.ui.v4.status_bar import StatusBar
 from backend.ui.v4.hud_label import HUDLabel
 
 
-
 class HUDDashboard(QWidget):
 
     def __init__(self):
 
         super().__init__()
-
 
         root = QVBoxLayout(self)
 
@@ -41,13 +37,11 @@ class HUDDashboard(QWidget):
             12
         )
 
-
         center = QHBoxLayout()
 
         center.setSpacing(
             15
         )
-
 
         # =========================
         # LEFT SYSTEM PANEL
@@ -57,11 +51,9 @@ class HUDDashboard(QWidget):
 
         left_layout = left.layout()
 
-
         left_layout.addWidget(
             HUDLabel("SYSTEM CORE")
         )
-
 
         self.online_label = HUDLabel(
             "● ONLINE"
@@ -70,7 +62,6 @@ class HUDDashboard(QWidget):
         left_layout.addWidget(
             self.online_label
         )
-
 
         # =========================
         # SYSTEM GAUGES
@@ -82,75 +73,55 @@ class HUDDashboard(QWidget):
 
         self.disk_gauge = SystemGauge("DISK")
 
-
-
-        # =========================
-        # GAUGE ROW
-        # =========================
-
         gauge_box = QHBoxLayout()
 
         gauge_box.setSpacing(
             15
         )
 
-
         gauge_box.addWidget(
             self.cpu_gauge
         )
-
 
         gauge_box.addWidget(
             self.ram_gauge
         )
 
-
         gauge_box.addWidget(
             self.disk_gauge
         )
-
 
         left_layout.addLayout(
             gauge_box
         )
 
-
-
         # =========================
         # TELEMETRY
         # =========================
-
 
         self.battery_label = HUDLabel(
             "BATTERY --"
         )
 
-
         self.network_label = HUDLabel(
             "NETWORK --"
         )
-
 
         self.device_label = HUDLabel(
             "DEVICE --"
         )
 
-
         self.os_label = HUDLabel(
             "OS --"
         )
-
 
         self.uptime_label = HUDLabel(
             "UPTIME --"
         )
 
-
         self.gpu_label = HUDLabel(
             "GPU --"
         )
-
-
 
         for label in [
             self.battery_label,
@@ -165,57 +136,51 @@ class HUDDashboard(QWidget):
                 label
             )
 
-
-
         left_layout.addWidget(
             HUDLabel("VOICE READY")
         )
-
 
         self.ai_state_label = HUDLabel(
             "AI STATE: IDLE"
         )
 
-
         left_layout.addWidget(
             self.ai_state_label
         )
-
-
 
         # =========================
         # ARC REACTOR
         # =========================
 
-
         self.reactor = AICore()
-
 
         jarvis_events.state_changed.connect(
             self.update_ai_state
         )
 
-
         jarvis_events.state_changed.connect(
             self.reactor.set_state
         )
 
+        # =========================
+        # SYSTEM EVENT BUS
+        # =========================
 
+        jarvis_events.system_updated.connect(
+            self.on_system_update
+        )
 
         # =========================
         # RIGHT MISSION PANEL
         # =========================
 
-
         right = HUDPanel()
 
         right_layout = right.layout()
 
-
         right_layout.addWidget(
             HUDLabel("MISSION CONTROL")
         )
-
 
         self.ai_engine_label = HUDLabel(
             "AI ENGINE : ACTIVE"
@@ -225,7 +190,6 @@ class HUDDashboard(QWidget):
             self.ai_engine_label
         )
 
-
         self.model_label = HUDLabel(
             "MODEL : qwen3-coder:30b"
         )
@@ -233,7 +197,6 @@ class HUDDashboard(QWidget):
         right_layout.addWidget(
             self.model_label
         )
-
 
         self.ollama_label = HUDLabel(
             "OLLAMA : CONNECTED"
@@ -243,7 +206,6 @@ class HUDDashboard(QWidget):
             self.ollama_label
         )
 
-
         self.memory_label = HUDLabel(
             "MEMORY : READY"
         )
@@ -251,7 +213,6 @@ class HUDDashboard(QWidget):
         right_layout.addWidget(
             self.memory_label
         )
-
 
         self.voice_label = HUDLabel(
             "VOICE : READY"
@@ -261,7 +222,6 @@ class HUDDashboard(QWidget):
             self.voice_label
         )
 
-
         self.command_label = HUDLabel(
             "LAST COMMAND : NONE"
         )
@@ -270,36 +230,28 @@ class HUDDashboard(QWidget):
             self.command_label
         )
 
-
-
         center.addWidget(
             left,
             2
         )
-
 
         center.addWidget(
             self.reactor,
             2
         )
 
-
         center.addWidget(
             right,
             1
         )
 
-
         root.addLayout(
             center
         )
 
-
-
         # =========================
-        # STATUS
+        # STATUS BAR
         # =========================
-
 
         self.status = StatusBar()
 
@@ -307,12 +259,9 @@ class HUDDashboard(QWidget):
             self.status
         )
 
-
-
         # =========================
         # CHAT
         # =========================
-
 
         self.chat = ChatPanel()
 
@@ -321,32 +270,24 @@ class HUDDashboard(QWidget):
             2
         )
 
-
-
         # =========================
-        # LIVE UPDATE
+        # LIVE UPDATE TIMER
         # =========================
 
-
-        self.timer = QTimer()
-
+        self.timer = QTimer(self)
 
         self.timer.timeout.connect(
             self.update_system
         )
 
-
         self.timer.start(
             2000
         )
 
-
         self.update_system()
 
-
-
     # =========================
-    # REACTOR STATE UPDATE
+    # AI STATE UPDATE
     # =========================
 
     def update_ai_state(self, state):
@@ -355,57 +296,51 @@ class HUDDashboard(QWidget):
             f"AI STATE: {state}"
         )
 
-
-
     # =========================
-    # SYSTEM UPDATE
+    # TIMER
     # =========================
 
     def update_system(self):
 
-        stats = SystemService.get_stats()
+        SystemService.publish_stats()
 
+    # =========================
+    # EVENT BUS CALLBACK
+    # =========================
 
+    def on_system_update(self, stats):
 
         self.cpu_gauge.setValue(
             stats["cpu"]
         )
 
-
         self.ram_gauge.setValue(
             stats["ram"]
         )
-
 
         self.disk_gauge.setValue(
             stats["disk"]
         )
 
-
         self.battery_label.setText(
             f"BATTERY  {stats['battery']}"
         )
-
 
         self.network_label.setText(
             f"NETWORK  {stats['network']}"
         )
 
-
         self.device_label.setText(
             f"DEVICE  {stats['device']}"
         )
-
 
         self.os_label.setText(
             f"OS  {stats['os']}"
         )
 
-
         self.uptime_label.setText(
             f"UPTIME  {stats['uptime']}"
         )
-
 
         self.gpu_label.setText(
             f"GPU  {stats['gpu']}"
