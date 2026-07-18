@@ -7,7 +7,7 @@ class Sidebar(QListWidget):
     Left Navigation Panel
     """
 
-    page_changed = Signal(str)
+    page_changed = Signal(object)
 
     def __init__(self):
         super().__init__()
