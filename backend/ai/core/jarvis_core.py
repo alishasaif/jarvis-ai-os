@@ -1,42 +1,49 @@
-"""
-J.A.R.V.I.S Core
-
-This is the central brain of J.A.R.V.I.S.
-
-Responsibilities:
-- Understand user requests
-- Execute local commands
-- Choose the correct AI model
-- Query the AI provider
-- Return the final response
-"""
-
-from backend.ai.router import AIRouter
 from backend.ai.manager import AIManager
 
 
 class JarvisCore:
+    """
+    Main J.A.R.V.I.S Intelligence Core
+
+    Handles:
+    - User requests
+    - AI processing
+    - Future memory
+    - Future planning
+    - Future tools
+    """
+
 
     def __init__(self):
 
-        self.router = AIRouter()
         self.ai = AIManager()
 
+
+
     def ask(self, prompt: str) -> str:
+        """
+        Main entry point used by AIWorker
+        """
 
-        # ---------------------------------
-        # Step 1
-        # Try executing locally first
-        # ---------------------------------
+        prompt = str(prompt).strip()
 
-        result = self.router.route(prompt)
 
-        if result is not None:
-            return result
+        if not prompt:
 
-        # ---------------------------------
-        # Step 2
-        # Otherwise ask the AI
-        # ---------------------------------
+            return "I did not receive a command."
 
-        return self.ai.generate(prompt)
+
+        response = self.ai.generate(
+            prompt
+        )
+
+
+        return str(response)
+
+
+
+    # Alias for future modules
+
+    def process(self, prompt: str) -> str:
+
+        return self.ask(prompt)

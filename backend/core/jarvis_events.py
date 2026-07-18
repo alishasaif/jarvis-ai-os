@@ -12,15 +12,15 @@ class JarvisEvents(QObject):
     # AI EVENTS
     # =========================
 
-    state_changed = Signal(str)
+    state_changed = Signal(object)
 
-    response_token = Signal(str)
+    response_token = Signal(object)
 
-    response_finished = Signal(str)
+    response_finished = Signal(object)
 
-    ai_request = Signal(str)
+    ai_request = Signal(object)
 
-    ai_error = Signal(str)
+    ai_error = Signal(object)
 
     # =========================
     # VOICE EVENTS
@@ -28,7 +28,7 @@ class JarvisEvents(QObject):
 
     wake_word_detected = Signal()
 
-    voice_command = Signal(str)
+    voice_command = Signal(object)
 
     microphone_started = Signal()
 
@@ -54,27 +54,27 @@ class JarvisEvents(QObject):
     # UI EVENTS
     # =========================
 
-    notification = Signal(str)
+    notification = Signal(object)
 
-    page_changed = Signal(str)
+    page_changed = Signal(object)
 
-    hud_message = Signal(str)
+    hud_message = Signal(object)
 
     # =========================
     # MEMORY EVENTS
     # =========================
 
-    memory_added = Signal(str)
+    memory_added = Signal(object)
 
-    memory_recalled = Signal(str)
+    memory_recalled = Signal(object)
 
     # =========================
     # AUTOMATION EVENTS
     # =========================
 
-    open_application = Signal(str)
+    open_application = Signal(object)
 
-    close_application = Signal(str)
+    close_application = Signal(object)
 
     # =========================
     # ANDROID EVENTS
@@ -88,11 +88,11 @@ class JarvisEvents(QObject):
     # DEBUG EVENTS
     # =========================
 
-    log = Signal(str)
+    log = Signal(object)
 
-    warning = Signal(str)
+    warning = Signal(object)
 
-    error = Signal(str)
+    error = Signal(object)
 
 
 jarvis_events = JarvisEvents()
