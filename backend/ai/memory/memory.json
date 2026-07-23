@@ -1,0 +1,85 @@
+{
+    "facts": {
+        "favourite language": "python\n\nhello\n\nwhat is my favourite language?\n\nwhat were we talking about?",
+        "my language": "python"
+    },
+    "history": [
+        {
+            "time": "2026-07-23T00:43:15.424217",
+            "role": "User",
+            "message": "remember that my favourite editor is VS Code"
+        },
+        {
+            "time": "2026-07-23T00:43:27.063074",
+            "role": "User",
+            "message": "what is my favourite editor?"
+        }
+    ],
+    "profile": {
+        "name": "",
+        "nickname": "",
+        "occupation": "",
+        "location": "",
+        "language": "English"
+    },
+    "preferences": {
+        "editor": "",
+        "theme": "",
+        "shell": "",
+        "os": "",
+        "language": "python",
+        "favourite_language": "Python"
+    },
+    "projects": {},
+    "conversation": [
+        {
+            "role": "user",
+            "content": "hello"
+        },
+        {
+            "role": "user",
+            "content": "what were we talking about?"
+        },
+        {
+            "role": "user",
+            "content": "What's my favorite language?"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favorite language is English."
+        },
+        {
+            "role": "user",
+            "content": "What were we talking about"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, we were discussing your favorite language."
+        },
+        {
+            "role": "user",
+            "content": "hello"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, hello."
+        },
+        {
+            "role": "user",
+            "content": "hello"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, hello."
+        },
+        {
+            "role": "user",
+            "content": "hello"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, hello."
+        }
+    ],
+    "last_updated": "2026-07-23T22:23:38.214837"
+}
