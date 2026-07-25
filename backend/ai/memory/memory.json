@@ -37,24 +37,16 @@
             "content": "hello"
         },
         {
-            "role": "user",
-            "content": "what were we talking about?"
+            "role": "assistant",
+            "content": "Hello, Sir."
         },
         {
             "role": "user",
-            "content": "What's my favorite language?"
+            "content": "heloo"
         },
         {
             "role": "assistant",
-            "content": "Sir, your favorite language is English."
-        },
-        {
-            "role": "user",
-            "content": "What were we talking about"
-        },
-        {
-            "role": "assistant",
-            "content": "Sir, we were discussing your favorite language."
+            "content": "Hello, Sir."
         },
         {
             "role": "user",
@@ -62,7 +54,7 @@
         },
         {
             "role": "assistant",
-            "content": "Sir, hello."
+            "content": "Hello, Sir."
         },
         {
             "role": "user",
@@ -70,16 +62,96 @@
         },
         {
             "role": "assistant",
-            "content": "Sir, hello."
+            "content": "Hello, Sir."
         },
         {
             "role": "user",
-            "content": "hello"
+            "content": "whats my favorete language"
         },
         {
             "role": "assistant",
-            "content": "Sir, hello."
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "remember my favourite language is Python"
+        },
+        {
+            "role": "assistant",
+            "content": "I'll remember that your favourite language is Python, Sir."
+        },
+        {
+            "role": "user",
+            "content": "whats my favorete language"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "remember my favourite language is Python"
+        },
+        {
+            "role": "assistant",
+            "content": "I'll remember that your favourite language is Python, Sir."
+        },
+        {
+            "role": "user",
+            "content": "whats my favorete language"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "what is my fav lang"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "remember my favourite language is Python"
+        },
+        {
+            "role": "assistant",
+            "content": "I'll remember that your favourite language is Python, Sir."
+        },
+        {
+            "role": "user",
+            "content": "what is my favorete language"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "what is my fav lang"
+        },
+        {
+            "role": "assistant",
+            "content": "Sir, your favourite language is Python."
+        },
+        {
+            "role": "user",
+            "content": "helo"
+        },
+        {
+            "role": "assistant",
+            "content": "Hello, Sir."
         }
     ],
-    "last_updated": "2026-07-23T22:23:38.214837"
+    "last_updated": "2026-07-24T02:31:53.178000"
 }

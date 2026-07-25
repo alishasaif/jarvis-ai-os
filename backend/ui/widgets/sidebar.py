@@ -7,9 +7,11 @@ class Sidebar(QListWidget):
     Left Navigation Panel
     """
 
-    page_changed = Signal(object)
+    page_changed = Signal(str)
+
 
     def __init__(self):
+
         super().__init__()
 
         self.setObjectName("Sidebar")
@@ -19,6 +21,7 @@ class Sidebar(QListWidget):
 
         self.setSpacing(6)
         self.setAlternatingRowColors(False)
+
 
         pages = [
             ("🏠", "Dashboard"),
@@ -32,14 +35,31 @@ class Sidebar(QListWidget):
             ("⚙", "Settings"),
         ]
 
+
         for icon, name in pages:
-            item = QListWidgetItem(f"{icon}   {name}")
-            item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+
+            item = QListWidgetItem(
+                f"{icon}   {name}"
+            )
+
+            item.setTextAlignment(
+                Qt.AlignLeft | Qt.AlignVCenter
+            )
+
             self.addItem(item)
+
 
         self.setCurrentRow(0)
 
-        self.currentTextChanged.connect(self.on_page_changed)
+
+        self.currentTextChanged.connect(
+            self.on_page_changed
+        )
+
+
 
     def on_page_changed(self, text):
-        self.page_changed.emit(text)
+
+        self.page_changed.emit(
+            str(text)
+        )

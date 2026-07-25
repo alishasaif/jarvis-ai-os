@@ -71,5 +71,8 @@ class Header(QWidget):
             now.strftime("%d %b %Y  |  %I:%M:%S %p")
         )
 
-    def set_status(self, text: str):
-        self.status.setText(text)
+    def set_status(self, text):
+
+    self.status.setText(
+        str(text)
+    )

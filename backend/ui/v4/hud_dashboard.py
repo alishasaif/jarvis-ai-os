@@ -37,6 +37,7 @@ class HUDDashboard(QWidget):
             12
         )
 
+
         center = QHBoxLayout()
 
         center.setSpacing(
@@ -47,6 +48,7 @@ class HUDDashboard(QWidget):
         left = HUDPanel()
 
         left_layout = left.layout()
+
 
         left_layout.addWidget(
             HUDLabel("SYSTEM CORE")
@@ -72,6 +74,7 @@ class HUDDashboard(QWidget):
         gauge_box.setSpacing(
             15
         )
+
 
         gauge_box.addWidget(self.cpu_gauge)
         gauge_box.addWidget(self.ram_gauge)
@@ -103,6 +106,7 @@ class HUDDashboard(QWidget):
             left_layout.addWidget(label)
 
 
+
         left_layout.addWidget(
             HUDLabel("VOICE READY")
         )
@@ -111,6 +115,7 @@ class HUDDashboard(QWidget):
         self.ai_state_label = HUDLabel(
             "AI STATE: IDLE"
         )
+
 
         left_layout.addWidget(
             self.ai_state_label
@@ -123,6 +128,7 @@ class HUDDashboard(QWidget):
         jarvis_events.state_changed.connect(
             self.update_ai_state
         )
+
 
         jarvis_events.state_changed.connect(
             self.reactor.set_state
@@ -137,6 +143,7 @@ class HUDDashboard(QWidget):
         right = HUDPanel()
 
         right_layout = right.layout()
+
 
         right_layout.addWidget(
             HUDLabel("MISSION CONTROL")
@@ -180,12 +187,14 @@ class HUDDashboard(QWidget):
             right_layout.addWidget(widget)
 
 
+
         center.addWidget(left, 2)
         center.addWidget(self.reactor, 2)
         center.addWidget(right, 1)
 
 
         root.addLayout(center)
+
 
 
         self.status = StatusBar()
@@ -209,16 +218,16 @@ class HUDDashboard(QWidget):
             self.update_system
         )
 
+
         self.timer.start(
             2000
         )
 
 
-        self.update_system()
-
-
     @Slot(str)
-    def update_ai_state(self, state: str):
+    def update_ai_state(self, state):
+
+        state = str(state)
 
         self.ai_state_label.setText(
             f"AI STATE: {state}"
@@ -231,14 +240,21 @@ class HUDDashboard(QWidget):
         SystemService.publish_stats()
 
 
+
     @Slot(dict)
     def on_system_update(self, stats: dict):
 
-        self.cpu_gauge.setValue(stats["cpu"])
+        self.cpu_gauge.setValue(
+            stats["cpu"]
+        )
 
-        self.ram_gauge.setValue(stats["ram"])
+        self.ram_gauge.setValue(
+            stats["ram"]
+        )
 
-        self.disk_gauge.setValue(stats["disk"])
+        self.disk_gauge.setValue(
+            stats["disk"]
+        )
 
 
         self.battery_label.setText(

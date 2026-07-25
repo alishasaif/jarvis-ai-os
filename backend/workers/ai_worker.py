@@ -5,11 +5,14 @@ from backend.ai.core.jarvis_core import JarvisCore
 
 class AIWorker(QObject):
 
-    finished = Signal(object)
-    error = Signal(object)
+    finished = Signal(str)
+
+    error = Signal(str)
 
     listening = Signal()
+
     thinking = Signal()
+
     speaking = Signal()
 
 
@@ -17,7 +20,6 @@ class AIWorker(QObject):
 
         super().__init__()
 
-        # Central J.A.R.V.I.S Brain
         self.jarvis = JarvisCore()
 
 
@@ -34,17 +36,22 @@ class AIWorker(QObject):
         try:
 
             print("[AIWorker] Emitting LISTENING")
+
             self.listening.emit()
 
 
+
             print("[AIWorker] Emitting THINKING")
+
             self.thinking.emit()
+
 
 
             print("[AIWorker] Asking Jarvis Core...")
 
+
             answer = self.jarvis.ask(
-                text
+                str(text)
             )
 
 
@@ -54,10 +61,12 @@ class AIWorker(QObject):
             self.speaking.emit()
 
 
+
             print("[AIWorker] Emitting FINISHED")
 
+
             self.finished.emit(
-                answer
+                str(answer)
             )
 
 
@@ -69,8 +78,14 @@ class AIWorker(QObject):
 
 
             print("[AIWorker] ERROR")
-            print(type(e).__name__)
-            print(str(e))
+
+            print(
+                type(e).__name__
+            )
+
+            print(
+                str(e)
+            )
 
 
             self.error.emit(

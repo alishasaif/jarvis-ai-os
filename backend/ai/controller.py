@@ -4,10 +4,13 @@ from backend.workers.ai_worker import AIWorker
 from backend.core.jarvis_events import jarvis_events
 
 
+
 class AIController(QObject):
 
-    response_ready = Signal(object)
-    error = Signal(object)
+    response_ready = Signal(str)
+
+    error = Signal(str)
+
 
 
     def __init__(self):
@@ -22,6 +25,7 @@ class AIController(QObject):
 
     def ask(self, prompt: str):
 
+
         if self.busy:
             return
 
@@ -34,6 +38,7 @@ class AIController(QObject):
 
         self.thread = QThread()
 
+
         self.worker = AIWorker()
 
 
@@ -43,7 +48,8 @@ class AIController(QObject):
 
 
         self.thread.started.connect(
-            lambda: self.worker.process(
+            lambda:
+            self.worker.process(
                 str(prompt)
             )
         )
@@ -60,21 +66,24 @@ class AIController(QObject):
 
 
         self.worker.listening.connect(
-            lambda: jarvis_events.state_changed.emit(
+            lambda:
+            jarvis_events.state_changed.emit(
                 "LISTENING"
             )
         )
 
 
         self.worker.thinking.connect(
-            lambda: jarvis_events.state_changed.emit(
+            lambda:
+            jarvis_events.state_changed.emit(
                 "THINKING"
             )
         )
 
 
         self.worker.speaking.connect(
-            lambda: jarvis_events.state_changed.emit(
+            lambda:
+            jarvis_events.state_changed.emit(
                 "SPEAKING"
             )
         )
@@ -89,6 +98,7 @@ class AIController(QObject):
 
     def _finished(self, text):
 
+
         self.busy = False
 
 
@@ -98,46 +108,39 @@ class AIController(QObject):
 
 
         self.response_ready.emit(
-            text
+            str(text)
         )
 
 
-        if self.thread:
-
-            self.thread.quit()
-
-            self.thread.wait()
-
-
-
-        if self.worker:
-
-            self.worker.deleteLater()
-
-
-        if self.thread:
-
-            self.thread.deleteLater()
-
+        self.cleanup()
 
 
 
     def _error(self, message):
 
+
         self.busy = False
 
 
         jarvis_events.state_changed.emit(
-            "IDLE"
+            "ERROR"
         )
 
 
         self.error.emit(
-            message
+            str(message)
         )
 
 
+        self.cleanup()
+
+
+
+    def cleanup(self):
+
+
         if self.thread:
+
 
             self.thread.quit()
 
@@ -150,6 +153,12 @@ class AIController(QObject):
             self.worker.deleteLater()
 
 
+
         if self.thread:
 
             self.thread.deleteLater()
+
+
+
+        self.worker = None
+        self.thread = None

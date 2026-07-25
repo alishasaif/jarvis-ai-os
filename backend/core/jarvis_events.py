@@ -8,19 +8,21 @@ class JarvisEvents(QObject):
     Every module communicates through this object.
     """
 
+
     # =========================
     # AI EVENTS
     # =========================
 
-    state_changed = Signal(object)
+    state_changed = Signal(str)
 
-    response_token = Signal(object)
+    response_token = Signal(str)
 
-    response_finished = Signal(object)
+    response_finished = Signal(str)
 
-    ai_request = Signal(object)
+    ai_request = Signal(str)
 
-    ai_error = Signal(object)
+    ai_error = Signal(str)
+
 
     # =========================
     # VOICE EVENTS
@@ -28,11 +30,12 @@ class JarvisEvents(QObject):
 
     wake_word_detected = Signal()
 
-    voice_command = Signal(object)
+    voice_command = Signal(str)
 
     microphone_started = Signal()
 
     microphone_stopped = Signal()
+
 
     # =========================
     # SYSTEM EVENTS
@@ -46,35 +49,38 @@ class JarvisEvents(QObject):
 
     disk_changed = Signal(float)
 
-    network_changed = Signal(bool)
+    network_changed = Signal(dict)
 
-    battery_changed = Signal(int)
+    battery_changed = Signal(object)
 
     # =========================
     # UI EVENTS
     # =========================
 
-    notification = Signal(object)
+    notification = Signal(str)
 
-    page_changed = Signal(object)
+    page_changed = Signal(str)
 
-    hud_message = Signal(object)
+    hud_message = Signal(str)
+
 
     # =========================
     # MEMORY EVENTS
     # =========================
 
-    memory_added = Signal(object)
+    memory_added = Signal(str)
 
-    memory_recalled = Signal(object)
+    memory_recalled = Signal(str)
+
 
     # =========================
     # AUTOMATION EVENTS
     # =========================
 
-    open_application = Signal(object)
+    open_application = Signal(str)
 
-    close_application = Signal(object)
+    close_application = Signal(str)
+
 
     # =========================
     # ANDROID EVENTS
@@ -84,15 +90,17 @@ class JarvisEvents(QObject):
 
     android_disconnected = Signal()
 
+
     # =========================
     # DEBUG EVENTS
     # =========================
 
-    log = Signal(object)
+    log = Signal(str)
 
-    warning = Signal(object)
+    warning = Signal(str)
 
-    error = Signal(object)
+    error = Signal(str)
+
 
 
 jarvis_events = JarvisEvents()
