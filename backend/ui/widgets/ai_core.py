@@ -30,18 +30,16 @@ class AICore(QWidget):
             420
         )
 
-
         self.timer = QTimer(self)
 
         self.timer.timeout.connect(
             self.animate
         )
 
-        self.timer.start(
-            16
-        )
+        self.timer.start(16)
 
 
+    @Slot()
     def animate(self):
 
         self.angle += self.speed
@@ -52,15 +50,13 @@ class AICore(QWidget):
         self.update()
 
 
-
-    @Slot(object)
+    @Slot(str)
     def set_state(self, state):
 
-        state = str(state)
+        state = str(state).upper()
 
         if state in self.colors:
             self.state = state
-
 
         if state == "THINKING":
 
@@ -82,9 +78,7 @@ class AICore(QWidget):
 
             self.speed = 2
 
-
         self.update()
-
 
 
     def paintEvent(self, event):
@@ -95,38 +89,30 @@ class AICore(QWidget):
             QPainter.Antialiasing
         )
 
-
         painter.fillRect(
             self.rect(),
             QColor("#070B14")
         )
 
-
-        cx = self.width()/2
-        cy = self.height()/2
-
+        cx = self.width() / 2
+        cy = self.height() / 2
 
         color = self.colors.get(
             self.state,
             QColor("#00E5FF")
         )
 
-
         pen = QPen(color)
-
         pen.setWidth(3)
 
         painter.setPen(pen)
 
-
-
         painter.drawEllipse(
-            int(cx-140),
-            int(cy-140),
+            int(cx - 140),
+            int(cy - 140),
             280,
             280
         )
-
 
         painter.save()
 
@@ -139,13 +125,9 @@ class AICore(QWidget):
             self.angle
         )
 
-
         pen.setWidth(2)
 
-        painter.setPen(
-            pen
-        )
-
+        painter.setPen(pen)
 
         painter.drawEllipse(
             -100,
@@ -154,10 +136,7 @@ class AICore(QWidget):
             200
         )
 
-
         painter.restore()
-
-
 
         painter.save()
 
@@ -167,9 +146,10 @@ class AICore(QWidget):
         )
 
         painter.rotate(
-            -self.angle*1.5
+            -self.angle * 1.5
         )
 
+        painter.setPen(pen)
 
         painter.drawEllipse(
             -70,
@@ -178,44 +158,39 @@ class AICore(QWidget):
             140
         )
 
-
         painter.restore()
 
-
-
-        painter.setBrush(
-            color
-        )
+        painter.setBrush(color)
 
         painter.setPen(
             Qt.NoPen
         )
 
-
         painter.drawEllipse(
-            int(cx-25),
-            int(cy-25),
+            int(cx - 25),
+            int(cy - 25),
             50,
             50
         )
 
+        x = cx + cos(
+            radians(self.angle)
+        ) * 120
 
-        x = cx + cos(radians(self.angle))*120
-        y = cy + sin(radians(self.angle))*120
-
+        y = cy + sin(
+            radians(self.angle)
+        ) * 120
 
         painter.drawEllipse(
-            int(x-6),
-            int(y-6),
+            int(x - 6),
+            int(y - 6),
             12,
             12
         )
 
-
         painter.setPen(
             QColor("#8FD9FF")
         )
-
 
         painter.drawText(
             self.rect(),
