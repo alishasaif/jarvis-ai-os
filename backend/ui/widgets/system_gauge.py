@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QPainter, QColor, QPen, QFont
 
 
@@ -9,19 +9,29 @@ class SystemGauge(QWidget):
 
         super().__init__()
 
-        self.title = title
-        self.value = 0
+        self.title = str(title)
+        self.value = 0.0
 
-        # Bigger widget so gauges don't overlap
         self.setMinimumSize(170, 170)
         self.setMaximumSize(170, 170)
 
-
+    @Slot(float)
     def setValue(self, value):
 
-        self.value = max(0, min(100, float(value)))
-        self.update()
+        try:
+            self.value = max(
+                0.0,
+                min(
+                    100.0,
+                    float(value)
+                )
+            )
 
+        except Exception:
+
+            self.value = 0.0
+
+        self.update()
 
     def paintEvent(self, event):
 
@@ -36,7 +46,6 @@ class SystemGauge(QWidget):
         rect_x = (w - size) / 2
         rect_y = 8
 
-        # Background Ring
         pen = QPen(QColor("#25303A"))
         pen.setWidth(12)
         painter.setPen(pen)
@@ -48,7 +57,6 @@ class SystemGauge(QWidget):
             int(size)
         )
 
-        # Progress Ring
         pen = QPen(QColor("#15E3FF"))
         pen.setWidth(12)
         pen.setCapStyle(Qt.RoundCap)
@@ -66,7 +74,6 @@ class SystemGauge(QWidget):
             span
         )
 
-        # Percentage
         painter.setPen(QColor("#FFFFFF"))
 
         font = QFont("Segoe UI", 12)
@@ -80,7 +87,6 @@ class SystemGauge(QWidget):
             f"{self.value:.1f}%"
         )
 
-        # Bottom Label
         painter.setPen(QColor("#FFFFFF"))
 
         font = QFont("Segoe UI", 10)
@@ -93,5 +99,5 @@ class SystemGauge(QWidget):
             w,
             20,
             Qt.AlignCenter,
-            self.title
+            str(self.title)
         )
