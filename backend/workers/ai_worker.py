@@ -1,48 +1,93 @@
 from PySide6.QtCore import QObject, Signal, Slot
 
-from backend.ai.router import AIRouter
-from backend.ai.providers.ollama_provider import OllamaProvider
+from backend.ai.core.jarvis_core import JarvisCore
 
 
 class AIWorker(QObject):
 
     finished = Signal(str)
+
     error = Signal(str)
 
     listening = Signal()
+
     thinking = Signal()
+
     speaking = Signal()
+
 
     def __init__(self):
 
         super().__init__()
 
-        self.router = AIRouter()
-        self.ai = OllamaProvider()
+        self.jarvis = JarvisCore()
+
+
 
     @Slot(str)
     def process(self, text):
 
+        print("=" * 60)
+        print("[AIWorker] process() started")
+        print(f"[AIWorker] Prompt: {text}")
+        print("=" * 60)
+
+
         try:
+
+            print("[AIWorker] Emitting LISTENING")
 
             self.listening.emit()
 
-            result = self.router.route(text)
 
-            if result:
 
-                self.speaking.emit()
-                self.finished.emit(result)
-                return
+            print("[AIWorker] Emitting THINKING")
 
             self.thinking.emit()
 
-            answer = self.ai.generate(text)
+
+
+            print("[AIWorker] Asking Jarvis Core...")
+
+
+            answer = self.jarvis.ask(
+                str(text)
+            )
+
+
+            print("[AIWorker] Jarvis Core returned successfully")
+
 
             self.speaking.emit()
 
-            self.finished.emit(answer)
+
+
+            print("[AIWorker] Emitting FINISHED")
+
+
+            self.finished.emit(
+                str(answer)
+            )
+
+
+            print("[AIWorker] process() completed")
+
+
 
         except Exception as e:
 
-            self.error.emit(str(e))
+
+            print("[AIWorker] ERROR")
+
+            print(
+                type(e).__name__
+            )
+
+            print(
+                str(e)
+            )
+
+
+            self.error.emit(
+                str(e)
+            )

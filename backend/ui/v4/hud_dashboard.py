@@ -4,11 +4,9 @@
     QVBoxLayout
 )
 
-from PySide6.QtCore import QTimer
-
+from PySide6.QtCore import QTimer, Slot
 
 from backend.services.system_service import SystemService
-
 from backend.core.jarvis_events import jarvis_events
 
 from backend.ui.widgets.ai_core import AICore
@@ -20,13 +18,11 @@ from backend.ui.v4.status_bar import StatusBar
 from backend.ui.v4.hud_label import HUDLabel
 
 
-
 class HUDDashboard(QWidget):
 
     def __init__(self):
 
         super().__init__()
-
 
         root = QVBoxLayout(self)
 
@@ -49,10 +45,6 @@ class HUDDashboard(QWidget):
         )
 
 
-        # =========================
-        # LEFT SYSTEM PANEL
-        # =========================
-
         left = HUDPanel()
 
         left_layout = left.layout()
@@ -72,21 +64,10 @@ class HUDDashboard(QWidget):
         )
 
 
-        # =========================
-        # SYSTEM GAUGES
-        # =========================
-
         self.cpu_gauge = SystemGauge("CPU")
-
         self.ram_gauge = SystemGauge("RAM")
-
         self.disk_gauge = SystemGauge("DISK")
 
-
-
-        # =========================
-        # GAUGE ROW
-        # =========================
 
         gauge_box = QHBoxLayout()
 
@@ -95,19 +76,9 @@ class HUDDashboard(QWidget):
         )
 
 
-        gauge_box.addWidget(
-            self.cpu_gauge
-        )
-
-
-        gauge_box.addWidget(
-            self.ram_gauge
-        )
-
-
-        gauge_box.addWidget(
-            self.disk_gauge
-        )
+        gauge_box.addWidget(self.cpu_gauge)
+        gauge_box.addWidget(self.ram_gauge)
+        gauge_box.addWidget(self.disk_gauge)
 
 
         left_layout.addLayout(
@@ -115,41 +86,12 @@ class HUDDashboard(QWidget):
         )
 
 
-
-        # =========================
-        # TELEMETRY
-        # =========================
-
-
-        self.battery_label = HUDLabel(
-            "BATTERY --"
-        )
-
-
-        self.network_label = HUDLabel(
-            "NETWORK --"
-        )
-
-
-        self.device_label = HUDLabel(
-            "DEVICE --"
-        )
-
-
-        self.os_label = HUDLabel(
-            "OS --"
-        )
-
-
-        self.uptime_label = HUDLabel(
-            "UPTIME --"
-        )
-
-
-        self.gpu_label = HUDLabel(
-            "GPU --"
-        )
-
+        self.battery_label = HUDLabel("BATTERY --")
+        self.network_label = HUDLabel("NETWORK --")
+        self.device_label = HUDLabel("DEVICE --")
+        self.os_label = HUDLabel("OS --")
+        self.uptime_label = HUDLabel("UPTIME --")
+        self.gpu_label = HUDLabel("GPU --")
 
 
         for label in [
@@ -161,9 +103,7 @@ class HUDDashboard(QWidget):
             self.gpu_label
         ]:
 
-            left_layout.addWidget(
-                label
-            )
+            left_layout.addWidget(label)
 
 
 
@@ -182,12 +122,6 @@ class HUDDashboard(QWidget):
         )
 
 
-
-        # =========================
-        # ARC REACTOR
-        # =========================
-
-
         self.reactor = AICore()
 
 
@@ -201,10 +135,9 @@ class HUDDashboard(QWidget):
         )
 
 
-
-        # =========================
-        # RIGHT MISSION PANEL
-        # =========================
+        jarvis_events.system_updated.connect(
+            self.on_system_update
+        )
 
 
         right = HUDPanel()
@@ -221,84 +154,47 @@ class HUDDashboard(QWidget):
             "AI ENGINE : ACTIVE"
         )
 
-        right_layout.addWidget(
-            self.ai_engine_label
-        )
-
-
         self.model_label = HUDLabel(
             "MODEL : qwen3-coder:30b"
         )
-
-        right_layout.addWidget(
-            self.model_label
-        )
-
 
         self.ollama_label = HUDLabel(
             "OLLAMA : CONNECTED"
         )
 
-        right_layout.addWidget(
-            self.ollama_label
-        )
-
-
         self.memory_label = HUDLabel(
             "MEMORY : READY"
         )
-
-        right_layout.addWidget(
-            self.memory_label
-        )
-
 
         self.voice_label = HUDLabel(
             "VOICE : READY"
         )
 
-        right_layout.addWidget(
-            self.voice_label
-        )
-
-
         self.command_label = HUDLabel(
             "LAST COMMAND : NONE"
         )
 
-        right_layout.addWidget(
+
+        for widget in [
+            self.ai_engine_label,
+            self.model_label,
+            self.ollama_label,
+            self.memory_label,
+            self.voice_label,
             self.command_label
-        )
+        ]:
+
+            right_layout.addWidget(widget)
 
 
 
-        center.addWidget(
-            left,
-            2
-        )
+        center.addWidget(left, 2)
+        center.addWidget(self.reactor, 2)
+        center.addWidget(right, 1)
 
 
-        center.addWidget(
-            self.reactor,
-            2
-        )
+        root.addLayout(center)
 
-
-        center.addWidget(
-            right,
-            1
-        )
-
-
-        root.addLayout(
-            center
-        )
-
-
-
-        # =========================
-        # STATUS
-        # =========================
 
 
         self.status = StatusBar()
@@ -306,12 +202,6 @@ class HUDDashboard(QWidget):
         root.addWidget(
             self.status
         )
-
-
-
-        # =========================
-        # CHAT
-        # =========================
 
 
         self.chat = ChatPanel()
@@ -322,14 +212,7 @@ class HUDDashboard(QWidget):
         )
 
 
-
-        # =========================
-        # LIVE UPDATE
-        # =========================
-
-
-        self.timer = QTimer()
-
+        self.timer = QTimer(self)
 
         self.timer.timeout.connect(
             self.update_system
@@ -341,41 +224,33 @@ class HUDDashboard(QWidget):
         )
 
 
-        self.update_system()
-
-
-
-    # =========================
-    # REACTOR STATE UPDATE
-    # =========================
-
+    @Slot(str)
     def update_ai_state(self, state):
+
+        state = str(state)
 
         self.ai_state_label.setText(
             f"AI STATE: {state}"
         )
 
 
-
-    # =========================
-    # SYSTEM UPDATE
-    # =========================
-
+    @Slot()
     def update_system(self):
 
-        stats = SystemService.get_stats()
+        SystemService.publish_stats()
 
 
+
+    @Slot(dict)
+    def on_system_update(self, stats: dict):
 
         self.cpu_gauge.setValue(
             stats["cpu"]
         )
 
-
         self.ram_gauge.setValue(
             stats["ram"]
         )
-
 
         self.disk_gauge.setValue(
             stats["disk"]
@@ -386,26 +261,21 @@ class HUDDashboard(QWidget):
             f"BATTERY  {stats['battery']}"
         )
 
-
         self.network_label.setText(
             f"NETWORK  {stats['network']}"
         )
-
 
         self.device_label.setText(
             f"DEVICE  {stats['device']}"
         )
 
-
         self.os_label.setText(
             f"OS  {stats['os']}"
         )
 
-
         self.uptime_label.setText(
             f"UPTIME  {stats['uptime']}"
         )
-
 
         self.gpu_label.setText(
             f"GPU  {stats['gpu']}"

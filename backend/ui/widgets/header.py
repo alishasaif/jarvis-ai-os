@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, Slot
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -10,11 +10,9 @@ from PySide6.QtWidgets import (
 
 
 class Header(QWidget):
-    """
-    Top Header Widget
-    """
 
     def __init__(self):
+
         super().__init__()
 
         self.setObjectName("Header")
@@ -22,24 +20,18 @@ class Header(QWidget):
         layout = QHBoxLayout(self)
         layout.setContentsMargins(20, 15, 20, 15)
 
-        # -----------------------
-        # Left Section
-        # -----------------------
-
         left = QVBoxLayout()
 
         self.title = QLabel("J.A.R.V.I.S AI OS")
         self.title.setObjectName("HeaderTitle")
 
-        self.subtitle = QLabel("Artificial Intelligence Operating System")
+        self.subtitle = QLabel(
+            "Artificial Intelligence Operating System"
+        )
         self.subtitle.setObjectName("HeaderSubtitle")
 
         left.addWidget(self.title)
         left.addWidget(self.subtitle)
-
-        # -----------------------
-        # Right Section
-        # -----------------------
 
         right = QVBoxLayout()
 
@@ -64,12 +56,18 @@ class Header(QWidget):
 
         self.update_clock()
 
+    @Slot()
     def update_clock(self):
+
         now = datetime.now()
 
         self.clock.setText(
             now.strftime("%d %b %Y  |  %I:%M:%S %p")
         )
 
-    def set_status(self, text: str):
-        self.status.setText(text)
+    @Slot(str)
+    def set_status(self, text):
+
+        self.status.setText(
+            str(text)
+        )

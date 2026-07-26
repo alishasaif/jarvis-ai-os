@@ -8,6 +8,7 @@ class JarvisEvents(QObject):
     Every module communicates through this object.
     """
 
+
     # =========================
     # AI EVENTS
     # =========================
@@ -22,6 +23,7 @@ class JarvisEvents(QObject):
 
     ai_error = Signal(str)
 
+
     # =========================
     # VOICE EVENTS
     # =========================
@@ -33,6 +35,7 @@ class JarvisEvents(QObject):
     microphone_started = Signal()
 
     microphone_stopped = Signal()
+
 
     # =========================
     # SYSTEM EVENTS
@@ -46,9 +49,9 @@ class JarvisEvents(QObject):
 
     disk_changed = Signal(float)
 
-    network_changed = Signal(bool)
+    network_changed = Signal(dict)
 
-    battery_changed = Signal(int)
+    battery_changed = Signal(object)
 
     # =========================
     # UI EVENTS
@@ -60,6 +63,7 @@ class JarvisEvents(QObject):
 
     hud_message = Signal(str)
 
+
     # =========================
     # MEMORY EVENTS
     # =========================
@@ -67,6 +71,7 @@ class JarvisEvents(QObject):
     memory_added = Signal(str)
 
     memory_recalled = Signal(str)
+
 
     # =========================
     # AUTOMATION EVENTS
@@ -76,6 +81,7 @@ class JarvisEvents(QObject):
 
     close_application = Signal(str)
 
+
     # =========================
     # ANDROID EVENTS
     # =========================
@@ -83,6 +89,7 @@ class JarvisEvents(QObject):
     android_connected = Signal()
 
     android_disconnected = Signal()
+
 
     # =========================
     # DEBUG EVENTS
@@ -93,6 +100,7 @@ class JarvisEvents(QObject):
     warning = Signal(str)
 
     error = Signal(str)
+
 
 
 jarvis_events = JarvisEvents()

@@ -1,39 +1,43 @@
-import psutil
 import platform
 import socket
 import time
+
+import psutil
 
 
 class SystemMonitor:
 
     boot_time = psutil.boot_time()
 
-
     @staticmethod
     def get_cpu():
-        return psutil.cpu_percent(interval=0.5)
-
+        return float(
+            psutil.cpu_percent(interval=None)
+        )
 
     @staticmethod
     def get_ram():
-        return psutil.virtual_memory().percent
-
+        return float(
+            psutil.virtual_memory().percent
+        )
 
     @staticmethod
     def get_disk():
-        return psutil.disk_usage('/').percent
-
+        return float(
+            psutil.disk_usage("/").percent
+        )
 
     @staticmethod
     def get_battery():
 
         battery = psutil.sensors_battery()
 
-        if battery:
-            return battery.percent
+        if battery is None:
+            return None
 
-        return "N/A"
-
+        return int(
+            battery.percent
+        )
 
     @staticmethod
     def get_network():
@@ -55,37 +59,49 @@ class SystemMonitor:
             "download": download
         }
 
+    @staticmethod
+    def get_gpu():
+
+        try:
+
+            import GPUtil
+
+            gpus = GPUtil.getGPUs()
+
+            if gpus:
+                return gpus[0].name
+
+        except Exception:
+            pass
+
+        return "N/A"
 
     @staticmethod
     def get_device():
-
         return platform.node()
-
 
     @staticmethod
     def get_os():
-
         return platform.system() + " " + platform.release()
-
 
     @staticmethod
     def get_ip():
 
         try:
             hostname = socket.gethostname()
-            ip = socket.gethostbyname(hostname)
+            return socket.gethostbyname(
+                hostname
+            )
 
-            return ip
-
-        except:
-
+        except Exception:
             return "Unknown"
-
 
     @staticmethod
     def get_uptime():
 
-        uptime_seconds = time.time() - SystemMonitor.boot_time
+        uptime_seconds = (
+            time.time() - SystemMonitor.boot_time
+        )
 
         hours = int(
             uptime_seconds // 3600
@@ -96,7 +112,6 @@ class SystemMonitor:
         )
 
         return f"{hours}h {minutes}m"
-
 
     @staticmethod
     def get_all():
@@ -117,6 +132,9 @@ class SystemMonitor:
 
             "network":
                 SystemMonitor.get_network(),
+
+            "gpu":
+                SystemMonitor.get_gpu(),
 
             "device":
                 SystemMonitor.get_device(),

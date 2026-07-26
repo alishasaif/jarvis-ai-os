@@ -6,8 +6,9 @@ from backend.core.jarvis_events import jarvis_events
 
 class AIController(QObject):
 
-    response_ready = Signal(str)
-    error = Signal(str)
+    response_ready = Signal(object)
+    error = Signal(object)
+
 
     def __init__(self):
 
@@ -17,69 +18,138 @@ class AIController(QObject):
         self.worker = None
         self.busy = False
 
+
+
     def ask(self, prompt: str):
 
         if self.busy:
             return
 
+
+        print("[AIController] ask() called")
+
+
         self.busy = True
+
 
         self.thread = QThread()
 
         self.worker = AIWorker()
 
-        self.worker.moveToThread(self.thread)
+
+        self.worker.moveToThread(
+            self.thread
+        )
+
 
         self.thread.started.connect(
-            lambda: self.worker.process(prompt)
+            lambda: self.worker.process(
+                str(prompt)
+            )
         )
+
 
         self.worker.finished.connect(
             self._finished
         )
 
+
         self.worker.error.connect(
             self._error
         )
 
+
         self.worker.listening.connect(
-            lambda: jarvis_events.state_changed.emit("LISTENING")
+            lambda: jarvis_events.state_changed.emit(
+                "LISTENING"
+            )
         )
+
 
         self.worker.thinking.connect(
-            lambda: jarvis_events.state_changed.emit("THINKING")
+            lambda: jarvis_events.state_changed.emit(
+                "THINKING"
+            )
         )
+
 
         self.worker.speaking.connect(
-            lambda: jarvis_events.state_changed.emit("SPEAKING")
+            lambda: jarvis_events.state_changed.emit(
+                "SPEAKING"
+            )
         )
 
+
+        print("[AIController] Starting worker thread")
+
+
         self.thread.start()
+
+
 
     def _finished(self, text):
 
         self.busy = False
 
-        jarvis_events.state_changed.emit("IDLE")
 
-        self.response_ready.emit(text)
+        jarvis_events.state_changed.emit(
+            "IDLE"
+        )
 
-        self.thread.quit()
-        self.thread.wait()
 
-        self.worker.deleteLater()
-        self.thread.deleteLater()
+        self.response_ready.emit(
+            text
+        )
+
+
+        if self.thread:
+
+            self.thread.quit()
+
+            self.thread.wait()
+
+
+
+        if self.worker:
+
+            self.worker.deleteLater()
+
+
+        if self.thread:
+
+            self.thread.deleteLater()
+
+
+
 
     def _error(self, message):
 
         self.busy = False
 
-        jarvis_events.state_changed.emit("IDLE")
 
-        self.error.emit(message)
+        jarvis_events.state_changed.emit(
+            "IDLE"
+        )
 
-        self.thread.quit()
-        self.thread.wait()
 
-        self.worker.deleteLater()
-        self.thread.deleteLater()
+        self.error.emit(
+            message
+        )
+
+
+        if self.thread:
+
+            self.thread.quit()
+
+            self.thread.wait()
+
+
+
+        if self.worker:
+
+            self.worker.deleteLater()
+
+
+        if self.thread:
+
+            self.thread.deleteLater()
